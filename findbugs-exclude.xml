@@ -1,0 +1,24 @@
+<FindBugsFilter>
+    <!-- Should be resolved by client applications replacing \r\n in log message config -->
+    <Match>
+        <Bug pattern="CRLF_INJECTION_LOGS" />
+    </Match>
+
+    <!-- Classes used to log the name of the method being called and its arguments -->
+    <Match>
+        <Class name="com.spt.development.logging.spring.JmsListenerLogger" />
+        <Bug pattern="SLF4J_SIGN_ONLY_FORMAT" />
+    </Match>
+    <Match>
+        <Class name="com.spt.development.logging.spring.RepositoryLogger" />
+        <Bug pattern="SLF4J_SIGN_ONLY_FORMAT" />
+    </Match>
+    <Match>
+        <Class name="com.spt.development.logging.spring.RestControllerLogger" />
+        <Bug pattern="SLF4J_SIGN_ONLY_FORMAT" />
+    </Match>
+    <Match>
+        <Class name="com.spt.development.logging.spring.ServiceLogger" />
+        <Bug pattern="SLF4J_SIGN_ONLY_FORMAT" />
+    </Match>
+</FindBugsFilter>
