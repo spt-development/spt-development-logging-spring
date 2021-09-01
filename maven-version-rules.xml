@@ -12,5 +12,11 @@
     </ignoreVersions>
 
     <rules>
+        <!-- Test dependencies aligned with Spring Boot -->
+        <rule groupId="org.mockito" artifactId="mockito-core" comparisonMethod="maven">
+            <ignoreVersions>
+                <ignoreVersion type="regex">.*</ignoreVersion>
+            </ignoreVersions>
+        </rule>
     </rules>
 </ruleset>
