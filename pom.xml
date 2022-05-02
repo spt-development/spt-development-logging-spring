@@ -34,14 +34,14 @@
         <!-- Dependency versions -->
         <aspectj.version>1.9.9.1</aspectj.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <spring.version>5.3.18</spring.version>
+        <spring.version>5.3.19</spring.version>
         <spt-cid.version>2.0.11</spt-cid.version>
 
         <!-- Test dependency versions -->
         <hamcrest.version>2.2</hamcrest.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
         <logback.version>1.2.11</logback.version>
-        <mockito.version>3.9.0</mockito.version>
+        <mockito.version>4.0.0</mockito.version>
 
         <!-- Plugin versions -->
         <checkstyle-maven-plugin.version>3.1.2</checkstyle-maven-plugin.version>
