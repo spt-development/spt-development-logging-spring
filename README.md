@@ -8,7 +8,7 @@
  logging-spring -----------------------------------------------------------------
 ````
 
-[![build_status](https://travis-ci.com/spt-development/spt-development-logging-spring.svg?branch=main)](https://travis-ci.com/spt-development/spt-development-logging-spring)
+[![build_status](https://github.com/spt-development/spt-development-logging-spring/actions/workflows/build.yml/badge.svg)](https://github.com/spt-development/spt-development-logging-spring/actions)
 
 A library for adding logging (at the start, end and on exception) to public methods of classes annotated with 
 `@RestController`, `@Service` or `@Repository` or methods annotated with `@JmsListener`.
@@ -50,9 +50,4 @@ To build the library, run the following maven command:
 Release
 =======
 
-To build a release and upload to Maven Central run the following maven command:
-
-    $ export GPG_TTY=$(tty) # Required on Mac OS X
-    $ mvn deploy -DskipTests -Prelease
-
-NOTE. This is currently a manual step as not currently integrated into the build.
+To build a release and upload to Maven Central push to `main`.
