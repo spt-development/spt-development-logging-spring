@@ -32,12 +32,14 @@
         <maven.compiler.release>8</maven.compiler.release>
 
         <!-- Dependency versions -->
+        <spt-cid.version>2.0.11</spt-cid.version>
+
+        <!-- Dependency versions, matched to Spring Boot -->
         <aspectj.version>1.9.7</aspectj.version>
         <slf4j.version>1.7.36</slf4j.version>
         <spring.version>5.3.22</spring.version>
-        <spt-cid.version>2.0.11</spt-cid.version>
 
-        <!-- Test dependency versions -->
+        <!-- Test dependency versions, matched to Spring Boot -->
         <hamcrest.version>2.2</hamcrest.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
         <logback.version>1.2.11</logback.version>
