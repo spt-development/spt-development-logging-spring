@@ -37,7 +37,7 @@
         <!-- Dependency versions, matched to Spring Boot -->
         <aspectj.version>1.9.7</aspectj.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <spring.version>5.3.22</spring.version>
+        <spring.version>5.3.23</spring.version>
 
         <!-- Test dependency versions, matched to Spring Boot -->
         <hamcrest.version>2.2</hamcrest.version>
@@ -254,6 +254,14 @@
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>${spotbugs.version}</version>
+                <dependencies>
+                    <!-- Overriding the default analyzer version, to support JDK 19 -->
+                    <dependency>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>${asm.version}</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <effort>Max</effort>
                     <threshold>Low</threshold>
