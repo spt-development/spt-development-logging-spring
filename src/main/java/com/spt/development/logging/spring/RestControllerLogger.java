@@ -1,6 +1,5 @@
 package com.spt.development.logging.spring;
 
-import com.spt.development.cid.CorrelationId;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -20,7 +19,25 @@ import static com.spt.development.logging.spring.LoggerUtil.formatArgs;
  * <code>org.springframework.web.bind.annotation.RestController</code> annotation.
  */
 @Aspect
-public class RestControllerLogger {
+public class RestControllerLogger extends LoggerAspect {
+
+    /**
+     * Creates a new instance of the logger aspect. The log statements added by the aspect will include the current
+     * correlation ID; see {@link RestControllerLogger#RestControllerLogger(boolean)} to disable this behaviour.
+     */
+    public RestControllerLogger() {
+        this(true);
+    }
+
+    /**
+     * Creates a new instance of the logger aspect.
+     *
+     * @param includeCorrelationIdInLogs a flag to determine whether the correlation ID should be explicitly included
+     *                                   in the log statements added by the aspect.
+     */
+    public RestControllerLogger(final boolean includeCorrelationIdInLogs) {
+        super(includeCorrelationIdInLogs);
+    }
 
     /**
      * Outputs INFO level logging when a public method belonging to a class, annotated with the
@@ -53,8 +70,8 @@ public class RestControllerLogger {
         final Logger log = LoggerFactory.getLogger(signature.getDeclaringType());
 
         if (log.isInfoEnabled()) {
-            log.info("[{}] {}.{}({})", CorrelationId.get(), point.getTarget().getClass().getSimpleName(),
-                    point.getSignature().getName(), formatArgs(signature.getMethod().getParameterAnnotations(), point.getArgs()));
+            info(log, "{}.{}({})", point.getTarget().getClass().getSimpleName(), point.getSignature().getName(),
+                    formatArgs(signature.getMethod().getParameterAnnotations(), point.getArgs()));
         }
         return proceed(point, log);
     }
@@ -68,27 +85,24 @@ public class RestControllerLogger {
                 final MethodSignature methodSignature = (MethodSignature)point.getSignature();
 
                 if (!methodSignature.getReturnType().equals(void.class)) {
-                    log.trace("[{}] {}.{} Returned: {}", CorrelationId.get(), point.getTarget().getClass().getSimpleName(),
-                            methodSignature.getName(), result);
+                    trace(log, "{}.{} Returned: {}", point.getTarget().getClass().getSimpleName(), methodSignature.getName(), result);
 
                     return result;
                 }
             }
-            log.info("[{}] {}.{} - complete", CorrelationId.get(), point.getTarget().getClass().getSimpleName(),
-                    point.getSignature().getName());
+            info(log, "{}.{} - complete", point.getTarget().getClass().getSimpleName(), point.getSignature().getName());
 
             return result;
         }
         catch (Throwable t) {
             if (isUnexpectedOr5xxServerError(t)) {
-                log.error("[{}] {}.{} threw exception: ", CorrelationId.get(), point.getTarget().getClass().getSimpleName(),
-                        point.getSignature().getName(), t);
+                error(log, "{}.{} threw exception: ", point.getTarget().getClass().getSimpleName(), point.getSignature().getName(), t);
             }
             else {
-                log.info("[{}] {}.{} threw exception: {}", CorrelationId.get(), point.getTarget().getClass().getSimpleName(),
-                        point.getSignature().getName(), t.getClass().getCanonicalName());
+                info(log, "{}.{} threw exception: {}", point.getTarget().getClass().getSimpleName(), point.getSignature().getName(),
+                        t.getClass().getCanonicalName());
 
-                log.debug("[{}] Exception: ", CorrelationId.get(), t);
+                debug(log, "Exception: ", t);
             }
             throw t;
         }

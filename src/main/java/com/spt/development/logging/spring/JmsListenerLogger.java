@@ -1,6 +1,5 @@
 package com.spt.development.logging.spring;
 
-import com.spt.development.cid.CorrelationId;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,7 +15,25 @@ import static com.spt.development.logging.spring.LoggerUtil.formatArgs;
  */
 @Aspect
 @Order(1)
-public class JmsListenerLogger {
+public class JmsListenerLogger extends LoggerAspect {
+
+    /**
+     * Creates a new instance of the logger aspect. The log statements added by the aspect will include the current
+     * correlation ID; see {@link JmsListenerLogger#JmsListenerLogger(boolean)} to disable this behaviour.
+     */
+    public JmsListenerLogger() {
+        this(true);
+    }
+
+    /**
+     * Creates a new instance of the logger aspect.
+     *
+     * @param includeCorrelationIdInLogs a flag to determine whether the correlation ID should be explicitly included
+     *                                   in the log statements added by the aspect.
+     */
+    public JmsListenerLogger(final boolean includeCorrelationIdInLogs) {
+        super(includeCorrelationIdInLogs);
+    }
 
     /**
      * Outputs INFO level logging when a public method annotated with the
@@ -43,9 +60,8 @@ public class JmsListenerLogger {
         final Logger log = LoggerFactory.getLogger(signature.getDeclaringType());
 
         if (log.isInfoEnabled()) {
-
-            log.info("[{}] {}.{}({})", CorrelationId.get(), point.getTarget().getClass().getSimpleName(),
-                    point.getSignature().getName(), formatArgs(signature.getMethod().getParameterAnnotations(), point.getArgs()));
+            info(log, "{}.{}({})", point.getTarget().getClass().getSimpleName(), point.getSignature().getName(),
+                    formatArgs(signature.getMethod().getParameterAnnotations(), point.getArgs()));
         }
         return proceed(point, log);
     }
@@ -53,8 +69,7 @@ public class JmsListenerLogger {
     private Object proceed(ProceedingJoinPoint point, Logger log) throws Throwable {
         final Object result = point.proceed();
 
-        log.info("[{}] {}.{} - complete", CorrelationId.get(), point.getTarget().getClass().getSimpleName(),
-                point.getSignature().getName());
+        info(log, "{}.{} - complete", point.getTarget().getClass().getSimpleName(), point.getSignature().getName());
 
         return result;
     }
