@@ -1,6 +1,5 @@
 package com.spt.development.logging.spring;
 
-import com.spt.development.cid.CorrelationId;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,7 +14,25 @@ import static com.spt.development.logging.spring.LoggerUtil.formatArgs;
  * annotation.
  */
 @Aspect
-public class ServiceLogger {
+public class ServiceLogger extends LoggerAspect {
+
+    /**
+     * Creates a new instance of the logger aspect. The log statements added by the aspect will include the current
+     * correlation ID; see {@link ServiceLogger#ServiceLogger(boolean)} to disable this behaviour.
+     */
+    public ServiceLogger() {
+        this(true);
+    }
+
+    /**
+     * Creates a new instance of the logger aspect.
+     *
+     * @param includeCorrelationIdInLogs a flag to determine whether the correlation ID should be explicitly included
+     *                                   in the log statements added by the aspect.
+     */
+    public ServiceLogger(final boolean includeCorrelationIdInLogs) {
+        super(includeCorrelationIdInLogs);
+    }
 
     /**
      * Outputs DEBUG level logging when a public method belonging to a class, annotated with the
@@ -43,8 +60,8 @@ public class ServiceLogger {
         final Logger log = LoggerFactory.getLogger(signature.getDeclaringType());
 
         if (log.isDebugEnabled()) {
-            log.debug("[{}] {}.{}({})", CorrelationId.get(), point.getTarget().getClass().getSimpleName(),
-                    point.getSignature().getName(), formatArgs(signature.getMethod().getParameterAnnotations(), point.getArgs()));
+            debug(log, "{}.{}({})", point.getTarget().getClass().getSimpleName(), point.getSignature().getName(),
+                    formatArgs(signature.getMethod().getParameterAnnotations(), point.getArgs()));
         }
         return proceed(point, log);
     }
@@ -56,14 +73,12 @@ public class ServiceLogger {
             final MethodSignature methodSignature = (MethodSignature)point.getSignature();
 
             if (!methodSignature.getReturnType().equals(void.class)) {
-                log.trace("[{}] {}.{} Returned: {}", CorrelationId.get(), point.getTarget().getClass().getSimpleName(),
-                        methodSignature.getName(), result);
+                trace(log, "{}.{} Returned: {}", point.getTarget().getClass().getSimpleName(), methodSignature.getName(), result);
 
                 return result;
             }
         }
-        log.debug("[{}] {}.{} - complete", CorrelationId.get(), point.getTarget().getClass().getSimpleName(),
-                point.getSignature().getName());
+        debug(log, "{}.{} - complete", point.getTarget().getClass().getSimpleName(), point.getSignature().getName());
 
         return result;
     }
