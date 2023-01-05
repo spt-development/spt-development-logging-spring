@@ -35,12 +35,12 @@
         <spt-cid.version>2.0.11</spt-cid.version>
 
         <!-- Dependency versions, matched to Spring Boot -->
-        <aspectj.version>1.9.9.1</aspectj.version>
-        <slf4j.version>2.0.4</slf4j.version>
-        <spring.version>6.0.2</spring.version>
+        <aspectj.version>1.9.19</aspectj.version>
+        <slf4j.version>2.0.6</slf4j.version>
+        <spring.version>6.0.3</spring.version>
 
         <!-- Test dependency versions -->
-        <spt-development-test>3.0.0</spt-development-test>
+        <spt-development-test>3.0.1</spt-development-test>
 
         <!-- Test dependency versions, matched to Spring Boot -->
         <hamcrest.version>2.2</hamcrest.version>
