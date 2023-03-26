@@ -36,16 +36,16 @@
 
         <!-- Dependency versions, matched to Spring Boot -->
         <aspectj.version>1.9.19</aspectj.version>
-        <slf4j.version>2.0.6</slf4j.version>
-        <spring.version>6.0.5</spring.version>
+        <slf4j.version>2.0.7</slf4j.version>
+        <spring.version>6.0.7</spring.version>
 
         <!-- Test dependency versions -->
-        <spt-development-test>3.0.3</spt-development-test>
+        <spt-development-test>3.0.4</spt-development-test>
 
         <!-- Test dependency versions, matched to Spring Boot -->
         <hamcrest.version>2.2</hamcrest.version>
         <junit-jupiter.version>5.9.2</junit-jupiter.version>
-        <logback.version>1.4.5</logback.version>
+        <logback.version>1.4.6</logback.version>
         <mockito.version>4.8.1</mockito.version>
 
         <!-- Plugin versions -->
@@ -66,7 +66,7 @@
         <versions-maven-plugin.version>2.8.1</versions-maven-plugin.version>
 
         <!-- Plugin dependencies -->
-        <asm.version>9.3</asm.version>
+        <asm.version>9.5</asm.version>
         <checkstyle.version>9.0.1</checkstyle.version>
         <maven-dependency-analyzer.version>1.12.0</maven-dependency-analyzer.version>
     </properties>
