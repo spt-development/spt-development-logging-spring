@@ -20,32 +20,36 @@ Register the Aspects as Spring Beans manually or by adding the
 [spt-development/spt-development-logging-spring-boot](https://github.com/spt-development/spt-development-logging-spring-boot)
 starter to your project's pom.
 
-    @Bean
-    public RestControllerLogger restControllerLogger() {
-        return new RestControllerLogger();
-    }
+```java
+@Bean
+public RestControllerLogger restControllerLogger() {
+    return new RestControllerLogger();
+}
 
-    @Bean
-    public JmsListenerLogger jmsListenerLogger() {
-        return new JmsListenerLogger();
-    }
+@Bean
+public JmsListenerLogger jmsListenerLogger() {
+    return new JmsListenerLogger();
+}
 
-    @Bean
-    public ServiceLogger serviceLogger() {
-        return new ServiceLogger();
-    }
+@Bean
+public ServiceLogger serviceLogger() {
+    return new ServiceLogger();
+}
 
-    @Bean
-    public RepositoryLogger repositoryLogger() {
-        return new RepositoryLogger();
-    }
+@Bean
+public RepositoryLogger repositoryLogger() {
+    return new RepositoryLogger();
+}
+```
 
 Building locally
 ================
 
 To build the library, run the following maven command:
 
-    $ mvn clean install
+```shell
+$ mvn clean install
+```
 
 Release
 =======
