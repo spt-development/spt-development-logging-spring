@@ -18,6 +18,11 @@
                 <ignoreVersion type="regex">.*</ignoreVersion>
             </ignoreVersions>
         </rule>
+        <rule groupId="org.apache.httpcomponents.core5" artifactId="httpcore5" comparisonMethod="maven">
+            <ignoreVersions>
+                <ignoreVersion type="regex">.*</ignoreVersion>
+            </ignoreVersions>
+        </rule>
 
         <!-- Test dependencies aligned with Spring Boot -->
         <rule groupId="ch.qos.logback" artifactId="logback-*" comparisonMethod="maven">
