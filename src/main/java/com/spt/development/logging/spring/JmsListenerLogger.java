@@ -3,12 +3,8 @@ package com.spt.development.logging.spring;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
-
-import static com.spt.development.logging.spring.LoggerUtil.formatArgs;
 
 /**
  * Logs calls to methods annotated with the <code>org.springframework.jms.annotation.JmsListener</code> annotation.
@@ -32,7 +28,7 @@ public class JmsListenerLogger extends LoggerAspect {
      *                                   in the log statements added by the aspect.
      */
     public JmsListenerLogger(final boolean includeCorrelationIdInLogs) {
-        super(includeCorrelationIdInLogs);
+        super(includeCorrelationIdInLogs, true);
     }
 
     /**
@@ -52,21 +48,16 @@ public class JmsListenerLogger extends LoggerAspect {
      *
      * @throws Throwable thrown if the method logged throws a {@link Throwable}.
      */
-    @Around("@annotation(org.springframework.jms.annotation.JmsListener)" +
-            " && !@annotation(com.spt.development.logging.NoLogging)" +
-            " && !@target(com.spt.development.logging.NoLogging)")
+    @Override
+    @Around("@annotation(org.springframework.jms.annotation.JmsListener) "
+        + "&& !@annotation(com.spt.development.logging.NoLogging) "
+        + "&& !@target(com.spt.development.logging.NoLogging)")
     public Object log(final ProceedingJoinPoint point) throws Throwable {
-        final MethodSignature signature = (MethodSignature)point.getSignature();
-        final Logger log = LoggerFactory.getLogger(signature.getDeclaringType());
-
-        if (log.isInfoEnabled()) {
-            info(log, "{}.{}({})", point.getTarget().getClass().getSimpleName(), point.getSignature().getName(),
-                    formatArgs(signature.getMethod().getParameterAnnotations(), point.getArgs()));
-        }
-        return proceed(point, log);
+        return super.log(point);
     }
 
-    private Object proceed(ProceedingJoinPoint point, Logger log) throws Throwable {
+    @Override
+    Object proceed(ProceedingJoinPoint point, Logger log) throws Throwable {
         final Object result = point.proceed();
 
         info(log, "{}.{} - complete", point.getTarget().getClass().getSimpleName(), point.getSignature().getName());

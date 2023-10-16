@@ -22,12 +22,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
 class ServiceLoggerTest {
-    private interface TestData {
-        String CORRELATION_ID = "7db425f7-ca20-4f95-a97b-7f0c95c92c9a";
-        String RESULT = "Success!";
-        String METHOD = "test";
-        String ARG1 = "TestArg";
-        String ARG2 = "TestArg2";
+    private static class TestData {
+        static final String CORRELATION_ID = "7db425f7-ca20-4f95-a97b-7f0c95c92c9a";
+        static final String RESULT = "Success!";
+        static final String METHOD = "test";
+        static final String ARG1 = "TestArg";
+        static final String ARG2 = "TestArg2";
     }
 
     @BeforeEach

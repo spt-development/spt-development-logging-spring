@@ -27,12 +27,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 class RestControllerLoggerTest {
-    private interface TestData {
-        String CORRELATION_ID = "52d676d9-81f3-4167-a078-09a1c2ed9a01";
-        String RESULT = "Success!";
-        String METHOD = "test";
-        String ARG1 = "TestArg";
-        String ARG2 = "TestArg2";
+    private static class TestData {
+        static final String CORRELATION_ID = "52d676d9-81f3-4167-a078-09a1c2ed9a01";
+        static final String RESULT = "Success!";
+        static final String METHOD = "test";
+        static final String ARG1 = "TestArg";
+        static final String ARG2 = "TestArg2";
     }
 
     @BeforeEach

@@ -6,9 +6,11 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
 final class LoggerUtil {
-    static final int MAX_DEBUG_STR_ARG_LEN = 75;
-
     static final String MASKED_ARG = "******";
+    static final String ELLIPSIS = "...";
+
+    static final int MAX_DEBUG_STR_ARG_LEN = 75;
+    static final int ELLIPSIS_LENGTH = ELLIPSIS.length();
 
     private LoggerUtil() {}
 
@@ -35,7 +37,7 @@ final class LoggerUtil {
             String strArg = obj.toString();
 
             if (strArg.length() > MAX_DEBUG_STR_ARG_LEN) {
-                strArg = String.format("%s...", strArg.substring(0, MAX_DEBUG_STR_ARG_LEN - 3));
+                strArg = String.format("%s%s", strArg.substring(0, MAX_DEBUG_STR_ARG_LEN - ELLIPSIS_LENGTH), ELLIPSIS);
             }
             strArg = strArg.replaceAll("(\r\n|\r|\n)", "\\\\n");
             strArg = strArg.replaceAll("'", "\\'");
