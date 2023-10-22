@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+    <!-- Allow Logger aspect methods to throw Throwable -->
+    <suppress checks="IllegalThrows" files="src[\\/]main[\\/]java[\\/]com[\\/]spt[\\/]development[\\/]logging[\\/]spring[\\/]LoggerAspect.java" />
+    <suppress checks="IllegalThrows" files="src[\\/]main[\\/]java[\\/]com[\\/]spt[\\/]development[\\/]logging[\\/]spring[\\/](JmsListener|RestController|Repository|Service)Logger.java" />
+</suppressions>

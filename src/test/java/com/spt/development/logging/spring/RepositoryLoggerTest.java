@@ -11,7 +11,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Constructor;
+
 import static com.spt.development.test.LogbackUtil.verifyLogging;
+import static com.spt.development.test.LogbackUtil.verifyNoLogging;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -22,12 +25,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
 class RepositoryLoggerTest {
-    private interface TestData {
-        String CORRELATION_ID = "2f0c045f-7547-438c-8496-700126b4d1f8";
-        String RESULT = "Success!";
-        String METHOD = "test";
-        String ARG1 = "TestArg";
-        String ARG2 = "TestArg2";
+    private static class TestData {
+        static final String CORRELATION_ID = "2f0c045f-7547-438c-8496-700126b4d1f8";
+        static final String RESULT = "Success!";
+        static final String METHOD = "test";
+        static final String ARG1 = "TestArg";
+        static final String ARG2 = "TestArg2";
     }
 
     @BeforeEach
@@ -38,7 +41,7 @@ class RepositoryLoggerTest {
     @ParameterizedTest
     @ValueSource(booleans = { true, false })
     void log_joinPointWithReturnValue_shouldReturnJoinPointResult(boolean includeCorrelationIdInLogs) throws Throwable {
-        final Object result = createLogger(includeCorrelationIdInLogs).log(createJoinPoint(String.class, TestData.RESULT));
+        final Object result = createLogger(includeCorrelationIdInLogs).log(createJoinPoint(TestTarget.class, String.class, TestData.RESULT));
 
         assertThat(result, is(TestData.RESULT));
     }
@@ -49,7 +52,7 @@ class RepositoryLoggerTest {
                 TestTarget.class,
                 () -> {
                     try {
-                        return createLogger(false).log(createJoinPoint(String.class, TestData.RESULT));
+                        return createLogger(false).log(createJoinPoint(TestTarget.class, String.class, TestData.RESULT));
                     } catch (Throwable t) {
                         throw new RuntimeException(t);
                     }
@@ -75,7 +78,7 @@ class RepositoryLoggerTest {
                 TestTarget.class,
                 () -> {
                     try {
-                        return createLogger(true).log(createJoinPoint(String.class, TestData.RESULT));
+                        return createLogger(true).log(createJoinPoint(TestTarget.class, String.class, TestData.RESULT));
                     } catch (Throwable t) {
                         throw new RuntimeException(t);
                     }
@@ -155,22 +158,59 @@ class RepositoryLoggerTest {
         );
     }
 
-    private ProceedingJoinPoint createJoinPoint(Class<Void> methodReturnType) throws Throwable {
-        return createJoinPoint(methodReturnType, null);
+    @Test
+    void log_logLevelAtInfo_shouldNotLogStartAndEndOfMethod() {
+        verifyNoLogging(
+            TestTargetLoggedAtInfo.class,
+            () -> {
+                try {
+                    return createLogger(true).log(createJoinPoint(TestTargetLoggedAtInfo.class, void.class));
+                } catch (Throwable t) {
+                    throw new RuntimeException(t);
+                }
+            }
+        );
     }
 
-    private <T> ProceedingJoinPoint createJoinPoint(Class<T> methodReturnType, T returnValue) throws Throwable {
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    void log_joinPointWithReturnValueAndLogLevelAtInfo_shouldReturnJoinPointResult(boolean includeCorrelationIdInLogs) throws Throwable {
+        final Object result = createLogger(includeCorrelationIdInLogs).log(createJoinPoint(TestTargetLoggedAtInfo.class, String.class, TestData.RESULT));
+
+        assertThat(result, is(TestData.RESULT));
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    void log_joinPointWithVoidReturnTypeAndLogLevelAtInfo_shouldReturnNull(boolean includeCorrelationIdInLogs) throws Throwable {
+        final Object result = createLogger(includeCorrelationIdInLogs).log(createJoinPoint(TestTargetLoggedAtInfo.class, void.class));
+
+        assertThat(result, is(nullValue()));
+    }
+
+    private  ProceedingJoinPoint createJoinPoint(Class<Void> methodReturnType) throws Throwable {
+        return createJoinPoint(TestTarget.class, methodReturnType);
+    }
+
+    private <T> ProceedingJoinPoint createJoinPoint(Class<T> target, Class<Void> methodReturnType) throws Throwable {
+        return createJoinPoint(target, methodReturnType, null);
+    }
+
+    private <T, U> ProceedingJoinPoint createJoinPoint(Class<T> target, Class<U> methodReturnType, U returnValue) throws Throwable {
         final ProceedingJoinPoint joinPoint = Mockito.mock(ProceedingJoinPoint.class);
         final MethodSignature methodSignature = Mockito.mock(MethodSignature.class);
 
         when(joinPoint.getSignature()).thenReturn(methodSignature);
         when(joinPoint.proceed()).thenReturn(returnValue);
-        when(joinPoint.getTarget()).thenReturn(new TestTarget());
+
+        final Constructor<T> targetConstructor = target.getDeclaredConstructor();
+
+        when(joinPoint.getTarget()).thenReturn(targetConstructor.newInstance());
         when(joinPoint.getArgs()).thenReturn(new Object[] { TestData.ARG1, TestData.ARG2 });
 
-        when(methodSignature.getDeclaringType()).thenReturn(TestTarget.class);
+        when(methodSignature.getDeclaringType()).thenReturn(target);
         when(methodSignature.getName()).thenReturn(TestData.METHOD);
-        when(methodSignature.getMethod()).thenReturn(TestTarget.class.getMethod(TestData.METHOD, String.class, String.class));
+        when(methodSignature.getMethod()).thenReturn(target.getMethod(TestData.METHOD, String.class, String.class));
         when(methodSignature.getReturnType()).thenReturn(methodReturnType);
 
         return joinPoint;
@@ -181,6 +221,12 @@ class RepositoryLoggerTest {
     }
 
     private static class TestTarget {
+        public String test(String correlationId, @NoLogging String password) {
+            return TestData.RESULT;
+        }
+    }
+
+    private static class TestTargetLoggedAtInfo {
         public String test(String correlationId, @NoLogging String password) {
             return TestData.RESULT;
         }

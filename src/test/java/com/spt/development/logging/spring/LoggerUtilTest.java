@@ -13,11 +13,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 class LoggerUtilTest {
-    private interface TestData {
-        String TEST_CLASS = "Test Class";
-        String SHORT_STRING = "Short String";
-        String MEDIUM_STRING = "String with 75 characters--------------------------------------------------";
-        String LONG_STRING =   "Very long String with one more character than the maximum (of 75 characters)";
+    private static class TestData {
+        static final String TEST_CLASS = "Test Class";
+        static final String SHORT_STRING = "Short String";
+        static final String MEDIUM_STRING = "String with 75 characters--------------------------------------------------";
+        static final String LONG_STRING =   "Very long String with one more character than the maximum (of 75 characters)";
     }
 
     @Test
@@ -31,7 +31,7 @@ class LoggerUtilTest {
     }
 
     @Test
-    public void formatArgs_stringArgExceedingMaxLength_shouldTruncateLongStringArgs() {
+    void formatArgs_stringArgExceedingMaxLength_shouldTruncateLongStringArgs() {
         final String result = formatArgs(
                 new Annotation[][] { {}, {} },
                 new Object[] { TestData.LONG_STRING, TestData.MEDIUM_STRING }
@@ -41,7 +41,7 @@ class LoggerUtilTest {
     }
 
     @Test
-    public void formatArgs_argAnnotatedWithNoLogging_shouldNotBeLogged() {
+    void formatArgs_argAnnotatedWithNoLogging_shouldNotBeLogged() {
         final String result = formatArgs(
                 new Annotation[][] { { new ConcreteNoLogging() }, { new ConcreteNoLogging() } },
                 new Object[] { TestData.LONG_STRING, new TestClass() }

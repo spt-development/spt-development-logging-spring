@@ -3,16 +3,12 @@ package com.spt.development.logging.spring;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.HttpStatusCodeException;
-
-import static com.spt.development.logging.spring.LoggerUtil.formatArgs;
 
 /**
  * Logs calls to all public methods belonging to classes with the
@@ -20,6 +16,7 @@ import static com.spt.development.logging.spring.LoggerUtil.formatArgs;
  */
 @Aspect
 public class RestControllerLogger extends LoggerAspect {
+    private static final String HTTP_STATUS_FIELD = "code";
 
     /**
      * Creates a new instance of the logger aspect. The log statements added by the aspect will include the current
@@ -36,7 +33,7 @@ public class RestControllerLogger extends LoggerAspect {
      *                                   in the log statements added by the aspect.
      */
     public RestControllerLogger(final boolean includeCorrelationIdInLogs) {
-        super(includeCorrelationIdInLogs);
+        super(includeCorrelationIdInLogs, true);
     }
 
     /**
@@ -62,43 +59,22 @@ public class RestControllerLogger extends LoggerAspect {
      *
      * @throws Throwable thrown if the method logged throws a {@link Throwable}.
      */
-    @Around("@within(org.springframework.web.bind.annotation.RestController)" +
-            " && !@annotation(com.spt.development.logging.NoLogging)" +
-            " && !@target(com.spt.development.logging.NoLogging)")
+    @Override
+    @Around("@within(org.springframework.web.bind.annotation.RestController) "
+        + "&& !@annotation(com.spt.development.logging.NoLogging) "
+        + "&& !@target(com.spt.development.logging.NoLogging)")
     public Object log(final ProceedingJoinPoint point) throws Throwable {
-        final MethodSignature signature = (MethodSignature)point.getSignature();
-        final Logger log = LoggerFactory.getLogger(signature.getDeclaringType());
-
-        if (log.isInfoEnabled()) {
-            info(log, "{}.{}({})", point.getTarget().getClass().getSimpleName(), point.getSignature().getName(),
-                    formatArgs(signature.getMethod().getParameterAnnotations(), point.getArgs()));
-        }
-        return proceed(point, log);
+        return super.log(point);
     }
 
-    private Object proceed(ProceedingJoinPoint point, Logger log) throws Throwable {
-
+    @Override
+    Object proceed(ProceedingJoinPoint point, Logger log) throws Throwable {
         try {
-            final Object result = point.proceed();
-
-            if (log.isTraceEnabled()) {
-                final MethodSignature methodSignature = (MethodSignature)point.getSignature();
-
-                if (!methodSignature.getReturnType().equals(void.class)) {
-                    trace(log, "{}.{} Returned: {}", point.getTarget().getClass().getSimpleName(), methodSignature.getName(), result);
-
-                    return result;
-                }
-            }
-            info(log, "{}.{} - complete", point.getTarget().getClass().getSimpleName(), point.getSignature().getName());
-
-            return result;
-        }
-        catch (Throwable t) {
+            return super.proceed(point, log);
+        } catch (Throwable t) {
             if (isUnexpectedOr5xxServerError(t)) {
                 error(log, "{}.{} threw exception: ", point.getTarget().getClass().getSimpleName(), point.getSignature().getName(), t);
-            }
-            else {
+            } else {
                 info(log, "{}.{} threw exception: {}", point.getTarget().getClass().getSimpleName(), point.getSignature().getName(),
                         t.getClass().getCanonicalName());
 
@@ -108,15 +84,13 @@ public class RestControllerLogger extends LoggerAspect {
         }
     }
 
-    private static final String HTTP_STATUS_FIELD = "code";
-
     private boolean isUnexpectedOr5xxServerError(Throwable t) {
         if (!(t instanceof HttpStatusCodeException)) {
             final AnnotationAttributes responseStatus = AnnotatedElementUtils.getMergedAnnotationAttributes(t.getClass(), ResponseStatus.class);
 
-            return responseStatus == null || !responseStatus.containsKey(HTTP_STATUS_FIELD) ||
-                    ((HttpStatus)responseStatus.getEnum(HTTP_STATUS_FIELD)).is5xxServerError();
+            return responseStatus == null || !responseStatus.containsKey(HTTP_STATUS_FIELD)
+                || ((HttpStatus) responseStatus.getEnum(HTTP_STATUS_FIELD)).is5xxServerError();
         }
-        return ((HttpStatusCodeException)t).getStatusCode().is5xxServerError();
+        return ((HttpStatusCodeException) t).getStatusCode().is5xxServerError();
     }
 }
