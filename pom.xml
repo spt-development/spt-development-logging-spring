@@ -3,7 +3,7 @@
 
     <groupId>com.spt-development</groupId>
     <artifactId>spt-development-logging-spring</artifactId>
-    <version>3.0.13-SNAPSHOT</version>
+    <version>3.0.12-SNAPSHOT</version>
 
     <name>logging-spring</name>
     <description>A very simple library for getting/setting the current correlation ID, utilising ThreadLocal.</description>
