@@ -49,9 +49,7 @@ public class JmsListenerLogger extends LoggerAspect {
      * @throws Throwable thrown if the method logged throws a {@link Throwable}.
      */
     @Override
-    @Around("@annotation(org.springframework.jms.annotation.JmsListener) "
-        + "&& !@annotation(com.spt.development.logging.NoLogging) "
-        + "&& !@target(com.spt.development.logging.NoLogging)")
+    @Around("@annotation(org.springframework.jms.annotation.JmsListener) && !loggingDisabled()")
     public Object log(final ProceedingJoinPoint point) throws Throwable {
         return super.log(point);
     }

@@ -3,7 +3,7 @@
 
     <groupId>com.spt-development</groupId>
     <artifactId>spt-development-logging-spring</artifactId>
-    <version>3.0.17-SNAPSHOT</version>
+    <version>3.1.0-SNAPSHOT</version>
 
     <name>logging-spring</name>
     <description>A very simple library for getting/setting the current correlation ID, utilising ThreadLocal.</description>
@@ -439,7 +439,7 @@
                                              Any classes / packages excluded here, must have specific rules for them below,
                                              with reasons.
                                           -->
-                                        <exclude>com.spt.development.audit.spring.security.AuthenticationAdapterFactory</exclude>
+                                        <exclude>com.spt.development.logging.spring.LoggerAspect</exclude>
                                     </excludes>
                                 </rule>
                                 <rule>
@@ -448,15 +448,12 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.82</minimum>
+                                            <minimum>0.97</minimum>
                                         </limit>
                                     </limits>
                                     <includes>
-                                        <!--
-                                             Difficult to force the ClassNotFoundException when checking if authentication
-                                             object is an instance of OAuth2Authentication
-                                          -->
-                                        <include>com.spt.development.audit.spring.security.AuthenticationAdapterFactory</include>
+                                        <!-- Placeholder method for pointcut does not need to be explicitly covered by tests -->
+                                        <include>com.spt.development.logging.spring.LoggerAspect</include>
                                     </includes>
                                 </rule>
                             </rules>

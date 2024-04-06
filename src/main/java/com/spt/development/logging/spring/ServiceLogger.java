@@ -48,9 +48,7 @@ public class ServiceLogger extends LoggerAspect {
      * @throws Throwable thrown if the method logged throws a {@link Throwable}.
      */
     @Override
-    @Around("@within(org.springframework.stereotype.Service) "
-        + "&& !@annotation(com.spt.development.logging.NoLogging) "
-        + "&& !@target(com.spt.development.logging.NoLogging)")
+    @Around("@within(org.springframework.stereotype.Service) && !loggingDisabled()")
     public Object log(final ProceedingJoinPoint point) throws Throwable {
         return super.log(point);
     }
