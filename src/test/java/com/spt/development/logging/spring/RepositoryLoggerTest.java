@@ -25,7 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
 class RepositoryLoggerTest {
-    private static class TestData {
+    private static final class TestData {
         static final String CORRELATION_ID = "2f0c045f-7547-438c-8496-700126b4d1f8";
         static final String RESULT = "Success!";
         static final String METHOD = "test";
@@ -220,13 +220,13 @@ class RepositoryLoggerTest {
         return includeCorrelationIdInLogs ? new RepositoryLogger() : new RepositoryLogger(false);
     }
 
-    private static class TestTarget {
+    private static final class TestTarget {
         public String test(String correlationId, @NoLogging String password) {
             return TestData.RESULT;
         }
     }
 
-    private static class TestTargetLoggedAtInfo {
+    private static final class TestTargetLoggedAtInfo {
         public String test(String correlationId, @NoLogging String password) {
             return TestData.RESULT;
         }

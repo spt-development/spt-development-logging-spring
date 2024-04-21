@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 class RestControllerLoggerTest {
-    private static class TestData {
+    private static final class TestData {
         static final String CORRELATION_ID = "52d676d9-81f3-4167-a078-09a1c2ed9a01";
         static final String RESULT = "Success!";
         static final String METHOD = "test";
@@ -494,17 +494,17 @@ class RestControllerLoggerTest {
         return includeCorrelationIdInLogs ? new RestControllerLogger() : new RestControllerLogger(false);
     }
 
-    private static class TestTarget {
+    private static final class TestTarget {
         public String test(String correlationId, @NoLogging String password) {
             return TestData.RESULT;
         }
     }
 
     @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Email address already in use")
-    private static class DuplicateUserException extends Exception {
+    private static final class DuplicateUserException extends Exception {
         static final long serialVersionUID = 1L;
 
-        public DuplicateUserException(String message, Throwable cause) {
+        DuplicateUserException(String message, Throwable cause) {
             super(message, cause);
         }
     }
