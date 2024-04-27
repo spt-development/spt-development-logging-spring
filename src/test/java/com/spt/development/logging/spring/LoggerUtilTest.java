@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 class LoggerUtilTest {
-    private static class TestData {
+    private static final class TestData {
         static final String TEST_CLASS = "Test Class";
         static final String SHORT_STRING = "Short String";
         static final String MEDIUM_STRING = "String with 75 characters--------------------------------------------------";
@@ -50,14 +50,14 @@ class LoggerUtilTest {
         assertThat(result, is(MASKED_ARG + ", " + MASKED_ARG));
     }
 
-    private static class TestClass {
+    private static final class TestClass {
         @Override
         public String toString() {
             return TestData.TEST_CLASS;
         }
     }
 
-    private static class ConcreteNoLogging implements NoLogging {
+    private static final class ConcreteNoLogging implements NoLogging {
 
         @Override
         public Class<? extends Annotation> annotationType() {
@@ -65,7 +65,7 @@ class LoggerUtilTest {
         }
     }
 
-    private static class ConcreteAnnotation implements Annotation {
+    private static final class ConcreteAnnotation implements Annotation {
 
         @Override
         public Class<? extends Annotation> annotationType() {

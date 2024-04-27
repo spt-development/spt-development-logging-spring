@@ -2,6 +2,7 @@ package com.spt.development.logging.spring;
 
 import com.spt.development.cid.CorrelationId;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,9 @@ abstract class LoggerAspect {
         this.includeCorrelationIdInLogs = includeCorrelationIdInLogs;
         this.isStartAndCompleteMethodLoggedAtInfo = isStartAndCompleteMethodLoggedAtInfo;
     }
+
+    @Pointcut("@annotation(com.spt.development.logging.NoLogging) || @target(com.spt.development.logging.NoLogging)")
+    void loggingDisabled() {}
 
     Object log(final ProceedingJoinPoint point) throws Throwable {
         final MethodSignature signature = (MethodSignature) point.getSignature();

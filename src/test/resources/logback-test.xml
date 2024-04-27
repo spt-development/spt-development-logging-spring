@@ -9,6 +9,7 @@
     </appender>
 
     <logger name="com.spt.development" level="TRACE" />
+    <logger name="com.spt.development.logging.spring.DaoSupportLoggerTest$TestTargetLoggedAtInfo" level="INFO" />
     <logger name="com.spt.development.logging.spring.RepositoryLoggerTest$TestTargetLoggedAtInfo" level="INFO" />
 
     <root level="INFO">

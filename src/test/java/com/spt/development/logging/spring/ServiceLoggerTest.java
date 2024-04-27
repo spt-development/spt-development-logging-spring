@@ -22,7 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
 class ServiceLoggerTest {
-    private static class TestData {
+    private static final class TestData {
         static final String CORRELATION_ID = "7db425f7-ca20-4f95-a97b-7f0c95c92c9a";
         static final String RESULT = "Success!";
         static final String METHOD = "test";
@@ -180,7 +180,7 @@ class ServiceLoggerTest {
         return includeCorrelationIdInLogs ? new ServiceLogger() : new ServiceLogger(false);
     }
 
-    private static class TestTarget {
+    private static final class TestTarget {
         public String test(String correlationId, @NoLogging String password) {
             return TestData.RESULT;
         }

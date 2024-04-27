@@ -11,7 +11,8 @@
 [![build_status](https://github.com/spt-development/spt-development-logging-spring/actions/workflows/build.yml/badge.svg)](https://github.com/spt-development/spt-development-logging-spring/actions)
 
 A library for adding logging (at the start, end and on exception) to public methods of classes annotated with 
-`@RestController`, `@Service` or `@Repository` or methods annotated with `@JmsListener`.
+`@RestController`, `@Service` or `@Repository` or methods annotated with `@JmsListener` or methods of sub-classes
+of `org.springframework.dao.support.DaoSupport`.
 
 Usage
 =====
@@ -21,6 +22,10 @@ Register the Aspects as Spring Beans manually or by adding the
 starter to your project's pom.
 
 ```java
+import com.spt.development.logging.spring.DaoSupportLogger;
+
+import java.beans.BeanProperty;
+
 @Bean
 public RestControllerLogger restControllerLogger() {
     return new RestControllerLogger();
@@ -40,7 +45,17 @@ public ServiceLogger serviceLogger() {
 public RepositoryLogger repositoryLogger() {
     return new RepositoryLogger();
 }
+
+@Bean
+public DaoSupportLogger daoSupportLogger() {
+    return new DaoSupportLogger();
+}
 ```
+
+*NOTE* The `DaoSupportLogger` will result in warnings such as the following being logged by `CglibAopProxy`:
+
+`Unable to proxy interface-implementing method [public final void org.springframework.dao.support.DaoSupport.afterPropertiesSet() throws java.lang.IllegalArgumentException,org.springframework.beans.factory.BeanInitializationException]
+because it is marked as final, consider using interface-based JDK proxies instead.`
 
 Building locally
 ================

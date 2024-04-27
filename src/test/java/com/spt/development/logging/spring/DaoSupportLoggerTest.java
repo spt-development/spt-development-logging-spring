@@ -24,7 +24,7 @@ import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
-class RepositoryLoggerTest {
+class DaoSupportLoggerTest {
     private static final class TestData {
         static final String CORRELATION_ID = "2f0c045f-7547-438c-8496-700126b4d1f8";
         static final String RESULT = "Success!";
@@ -216,17 +216,17 @@ class RepositoryLoggerTest {
         return joinPoint;
     }
 
-    private RepositoryLogger createLogger(boolean includeCorrelationIdInLogs) {
-        return includeCorrelationIdInLogs ? new RepositoryLogger() : new RepositoryLogger(false);
+    private DaoSupportLogger createLogger(boolean includeCorrelationIdInLogs) {
+        return includeCorrelationIdInLogs ? new DaoSupportLogger() : new DaoSupportLogger(false);
     }
 
-    private static final class TestTarget {
+    private static final class TestTarget extends DaoSupportLogger {
         public String test(String correlationId, @NoLogging String password) {
             return TestData.RESULT;
         }
     }
 
-    private static final class TestTargetLoggedAtInfo {
+    private static final class TestTargetLoggedAtInfo extends DaoSupportLogger {
         public String test(String correlationId, @NoLogging String password) {
             return TestData.RESULT;
         }
