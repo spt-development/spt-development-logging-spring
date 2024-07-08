@@ -57,6 +57,35 @@ public DaoSupportLogger daoSupportLogger() {
 `Unable to proxy interface-implementing method [public final void org.springframework.dao.support.DaoSupport.afterPropertiesSet() throws java.lang.IllegalArgumentException,org.springframework.beans.factory.BeanInitializationException]
 because it is marked as final, consider using interface-based JDK proxies instead.`
 
+The aspects above rely on classes either extending specific base classes or being annotated with particular annotations. `BeanLogger` has
+been introduced to add logging to arbitrary beans whether they are annotated with annotations such as `@Component` or whether they are
+instantiated with a factory method. Logging for arbitrary beans is enabled with the `EnableBeanLogging` annotation:
+
+```java
+@Configuration
+@EnableBeanLogging(
+    excludedClasses = MyExcludedBean.class,
+    includeBasePackageClasses = {
+        MyLoggedBean.class
+    }
+)
+static class MyConfiguration {
+    @Bean
+    MyLoggedClass myLoggedBean() {
+        return new MyLoggedClass();
+    }
+
+    @Bean
+    MyExcludedBean myExcludedBean() {
+        return new MyExcludedBean();
+    }
+}
+```
+
+*NOTE* `excludedClasses` only excludes the class from logging being added with `BeanLogger` and as such, logging could still be added 
+with one of the other aspects from this librar, such as `DaoSupportLogger` if it extends the right base class or is annotated with the
+right annotation.
+
 Building locally
 ================
 

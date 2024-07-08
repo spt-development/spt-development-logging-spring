@@ -21,4 +21,10 @@
         <Class name="com.spt.development.logging.spring.ServiceLogger" />
         <Bug pattern="SLF4J_SIGN_ONLY_FORMAT" />
     </Match>
+
+    <!-- No obvious workaround - not possible to take a copy of proceedingJoinPoint -->
+    <Match>
+        <Class name="com.spt.development.logging.spring.invocation.ProceedingJoinPointAdapter" />
+        <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
 </FindBugsFilter>

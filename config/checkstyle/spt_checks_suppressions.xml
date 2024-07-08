@@ -4,6 +4,9 @@
         "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 <suppressions>
     <!-- Allow Logger aspect methods to throw Throwable -->
+    <suppress checks="IllegalThrows" files="src[\\/]main[\\/]java[\\/]com[\\/]spt[\\/]development[\\/]logging[\\/]spring[\\/]invocation[\\/]LoggedInvocation.java" />
+    <suppress checks="IllegalThrows" files="src[\\/]main[\\/]java[\\/]com[\\/]spt[\\/]development[\\/]logging[\\/]spring[\\/]invocation[\\/]ProceedingJoinPointAdapter.java" />
+    <suppress checks="IllegalThrows" files="src[\\/]main[\\/]java[\\/]com[\\/]spt[\\/]development[\\/]logging[\\/]spring[\\/]InvocationLogger.java" />
     <suppress checks="IllegalThrows" files="src[\\/]main[\\/]java[\\/]com[\\/]spt[\\/]development[\\/]logging[\\/]spring[\\/]LoggerAspect.java" />
     <suppress checks="IllegalThrows" files="src[\\/]main[\\/]java[\\/]com[\\/]spt[\\/]development[\\/]logging[\\/]spring[\\/](JmsListener|RestController|Repository|Service)Logger.java" />
 </suppressions>

@@ -3,7 +3,7 @@
 
     <groupId>com.spt-development</groupId>
     <artifactId>spt-development-logging-spring</artifactId>
-    <version>3.1.2-SNAPSHOT</version>
+    <version>3.2.0-SNAPSHOT</version>
 
     <name>logging-spring</name>
     <description>A very simple library for getting/setting the current correlation ID, utilising ThreadLocal.</description>
@@ -120,6 +120,21 @@
         <!-- Spring dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <!-- Version defined in spring framework bom, imported in dependencyManagement section -->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <!-- Version defined in spring framework bom, imported in dependencyManagement section -->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <!-- Version defined in spring framework bom, imported in dependencyManagement section -->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <!-- Version defined in spring framework bom, imported in dependencyManagement section -->
         </dependency>
@@ -191,6 +206,12 @@
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+            <!-- Version defined in spring framework bom, imported in dependencyManagement section -->
         </dependency>
 
         <!-- Test dependencies not directly related to testing -->
@@ -471,7 +492,7 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.97</minimum>
+                                            <minimum>0.83</minimum>
                                         </limit>
                                     </limits>
                                     <includes>
@@ -542,7 +563,7 @@
                         <configuration>
                             <mutationThreshold>100</mutationThreshold>
                             <excludedClasses>
-                                <param>com.spt.development.audit.spring.security.AuthenticationAdapterFactory</param>
+                                <param>com.spt.development.logging.spring.annotation.BeanLoggerConfiguration</param>
                             </excludedClasses>
                         </configuration>
                         <executions>

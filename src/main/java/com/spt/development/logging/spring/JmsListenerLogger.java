@@ -1,5 +1,6 @@
 package com.spt.development.logging.spring;
 
+import com.spt.development.logging.spring.invocation.LoggedInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -55,10 +56,10 @@ public class JmsListenerLogger extends LoggerAspect {
     }
 
     @Override
-    Object proceed(ProceedingJoinPoint point, Logger log) throws Throwable {
-        final Object result = point.proceed();
+    Object proceed(LoggedInvocation invocation, Logger log) throws Throwable {
+        final Object result = invocation.proceed();
 
-        info(log, "{}.{} - complete", point.getTarget().getClass().getSimpleName(), point.getSignature().getName());
+        info(log, "{}.{} - complete", invocation.getDeclaringClass().getSimpleName(), invocation.getMethod().getName());
 
         return result;
     }
