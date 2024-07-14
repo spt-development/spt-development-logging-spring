@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 public @interface EnableBeanLogging {
 
     /**
-     * Enables logging of Spring beans from the same package as any of th classes specified.
+     * Enables logging of Spring beans from the same package as any of the classes specified.
      *
      * @return base packages to log.
      */
