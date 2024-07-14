@@ -1,5 +1,6 @@
 package com.spt.development.logging.spring;
 
+import com.spt.development.logging.spring.invocation.LoggedInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -66,14 +67,14 @@ public class RestControllerLogger extends LoggerAspect {
     }
 
     @Override
-    Object proceed(ProceedingJoinPoint point, Logger log) throws Throwable {
+    Object proceed(LoggedInvocation invocation, Logger log) throws Throwable {
         try {
-            return super.proceed(point, log);
+            return super.proceed(invocation, log);
         } catch (Throwable t) {
             if (isUnexpectedOr5xxServerError(t)) {
-                error(log, "{}.{} threw exception: ", point.getTarget().getClass().getSimpleName(), point.getSignature().getName(), t);
+                error(log, "{}.{} threw exception: ", invocation.getDeclaringClass().getSimpleName(), invocation.getMethod().getName(), t);
             } else {
-                info(log, "{}.{} threw exception: {}", point.getTarget().getClass().getSimpleName(), point.getSignature().getName(),
+                info(log, "{}.{} threw exception: {}", invocation.getDeclaringClass().getSimpleName(), invocation.getMethod().getName(),
                         t.getClass().getCanonicalName());
 
                 debug(log, "Exception: ", t);

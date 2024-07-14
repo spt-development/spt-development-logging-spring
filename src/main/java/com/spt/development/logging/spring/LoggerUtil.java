@@ -5,7 +5,10 @@ import com.spt.development.logging.NoLogging;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
-final class LoggerUtil {
+public final class LoggerUtil {
+    public static final String LOGGING_DISABLED_POINTCUT_EXPRESSION =
+        "@annotation(com.spt.development.logging.NoLogging) || @target(com.spt.development.logging.NoLogging)";
+
     static final String MASKED_ARG = "******";
     static final String ELLIPSIS = "...";
 

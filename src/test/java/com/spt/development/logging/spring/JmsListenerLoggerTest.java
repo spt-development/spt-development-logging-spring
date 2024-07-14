@@ -10,6 +10,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Method;
+
 import static com.spt.development.test.LogbackUtil.verifyLogging;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
@@ -90,6 +92,9 @@ class JmsListenerLoggerTest {
     }
 
     private ProceedingJoinPoint createJoinPoint() throws Throwable {
+        final Class<TestTarget> target = TestTarget.class;
+        final Method method = TestTarget.class.getMethod(TestData.METHOD, String.class, String.class);
+
         final ProceedingJoinPoint joinPoint = Mockito.mock(ProceedingJoinPoint.class);
         final MethodSignature methodSignature = Mockito.mock(MethodSignature.class);
 
@@ -98,9 +103,10 @@ class JmsListenerLoggerTest {
         when(joinPoint.getTarget()).thenReturn(new TestTarget());
         when(joinPoint.getArgs()).thenReturn(new Object[] { TestData.ARG1, TestData.ARG2 });
 
-        when(methodSignature.getDeclaringType()).thenReturn(TestTarget.class);
-        when(methodSignature.getName()).thenReturn(TestData.METHOD);
-        when(methodSignature.getMethod()).thenReturn(TestTarget.class.getMethod(TestData.METHOD, String.class, String.class));
+        when(methodSignature.getDeclaringType()).thenReturn(target);
+        when(methodSignature.getName()).thenReturn(method.getName());
+        when(methodSignature.getMethod()).thenReturn(method);
+        when(methodSignature.getReturnType()).thenReturn(method.getReturnType());
 
         return joinPoint;
     }
