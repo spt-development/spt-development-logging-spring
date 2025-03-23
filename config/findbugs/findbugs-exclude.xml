@@ -22,6 +22,12 @@
         <Bug pattern="SLF4J_SIGN_ONLY_FORMAT" />
     </Match>
 
+    <!-- False negative - implementations throw Throwable -->
+    <Match>
+        <Class name="com.spt.development.logging.spring.invocation.LoggedInvocation" />
+        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_THROWABLE" />
+    </Match>
+
     <!-- No obvious workaround - not possible to take a copy of proceedingJoinPoint -->
     <Match>
         <Class name="com.spt.development.logging.spring.invocation.ProceedingJoinPointAdapter" />
